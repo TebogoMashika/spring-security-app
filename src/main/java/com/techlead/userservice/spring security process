@@ -1,0 +1,37 @@
+
+Process to build spring security
+
+1. create the model, repo, service and controller
+2. create the security config package
+    - add the configure method - with the AuthenticationManagerBuilder
+    - add the configure method - with the HttpSecurity http
+
+3. create the authentication filters
+    - attemptAuthentication
+        1. receive request
+        2. get params of the request - can also get the headers of the request
+        3. pass the request params to AuthenticationManager to do authentication
+
+    - successfulAuthentication
+        0. this method will be automatically called when the user is successfully authenticated
+        1. add > auth0 java jwt maven dependencies - include the dependencies section(pom.xml)
+        2. get the authenticated user - setPrinciple
+        3. create an algorithm
+        4. create token and sign it and send the response
+        5. create the response to be in a JSON format
+
+4. create an authorization filter - with this we will take the token from the user and give him applicable access
+    - doFilterInternal
+        - allow all request where the user is trying to login
+        - intercept all request where the user is trying to access the application
+        - check if the request header has the key "AUTHORIZATION"
+        - when the user has authorization the token will start with "Bearer "
+        - get the token
+        - use the algorithm (secrete) to verify the token
+        - decode the token
+        - get the user name and roles
+        - convert the roles to SimpleGrantedAuthority - spring only recognised this authorities
+        - pass the username and the roles(SimpleGrantedAuthority) to spring security to manage the logged in user
+
+
+Refresh Token
